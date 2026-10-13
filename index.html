@@ -1418,6 +1418,9 @@ svg.mpend-art{ width:auto; height:44px }
 /* punk tuner: no placeholder dash in the meter while idle, and no in-tune mark above the centre tick */
 [data-skin="punk"] #tuner[data-state="max"] .tnote[data-idle]{ visibility:hidden }
 [data-skin="punk"] #tuner[data-state="max"] .tgauge .ok{ display:none }
+/* punk title: Nick's spray-painted logo (title.webp, 900×302); the words stay in the heading for screen readers */
+[data-skin="punk"] h1{ width:min(100%, 470px); aspect-ratio:900/302; height:auto; max-width:100%; padding:0; margin:-6px 0 -18px;
+  background:var(--k-title) left top/contain no-repeat; color:transparent; font-size:0; line-height:0; overflow:hidden; filter:drop-shadow(0 3px 4px rgba(0,0,0,.6)) }
 </style>
 
 <div class="wrap flex flex-col gap-5">
@@ -3086,9 +3089,9 @@ const SKINS = {
            pend:{w:360, h:710, pivot:[180,612], armLen:455, slide:[.3,.85], arm:{w:47, h:600, hub:[23,575.5], len:574.5}, weight:{w:160, h:201}, weightScale:.6}},
   // Punk: the page is a rack. Chipped black-enamel faceplates (with rack ears), stomp-box cards, an orange metronome pedal, chrome hardware;
   // Grok art from grok-prompts-punk-rack.md (13 Oct); pedal-2 is pedal re-coloured orange by Claude, knob-ring is drawn; borrows Foundry's black fretboard
-  punk:   {tunerDisplay:'needle', metroDisplay:'row', pedals:true, label:'Punk', dir:'skins/punk/', fretboard:'../foundry/fretboard.jpg', shadows:false, ransom:true,
+  punk:   {tunerDisplay:'needle', metroDisplay:'row', pedals:true, label:'Punk', dir:'skins/punk/', fretboard:'../foundry/fretboard.jpg', shadows:false,
            kit:['bg.jpg','panel','ear','card','tape','plate','plate-sel','led','pedal','pedal-2','footswitch','knob-cap','knob-ring.svg','chickenhead','slider','toggle-on','toggle-off',
-                'gauge','needle','decal-anarchy','decal-skull','decal-hazard','decal-x','gaffer-1','gaffer-2','slogan-gods','slogan-smash','spray-peace'],
+                'gauge','needle','decal-anarchy','decal-skull','decal-hazard','decal-x','gaffer-1','gaffer-2','slogan-gods','slogan-smash','spray-peace','title'],
            gauge:{w:600, h:444, pivot:[300,375], r:270, sweep:40, needle:{w:46, h:500, hub:[23,476], len:476}}, needle:{k:120, zeta:.55}},
   studio: {label:'Studio (plain)', pedals:true},
   hivis:  {tunerDisplay:'led', metroDisplay:'row', label:'High-Vis (accessible)', pedals:true},
