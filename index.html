@@ -890,6 +890,17 @@ details[open] > summary{ margin-bottom:6px }
 .now{ display:flex; flex-direction:column; min-width:4.5rem }
 .nowname{ font-family:var(--f-display); font-weight:800; font-size:1.5rem; line-height:1 }
 .tempo{ display:flex; align-items:center; gap:8px }
+.tchecks{ display:flex; flex-direction:column; align-items:flex-start; gap:4px }
+.rampw{ display:flex; align-items:center; gap:4px }
+.rampset{ padding:.1rem .4rem; font-size:.72rem; white-space:nowrap; min-width:0; line-height:1.3 }
+.rampset[hidden]{ display:none }
+.ramppop{ position:fixed; bottom:calc(var(--tbar-h, 120px) + 8px); left:16px; z-index:30; width:max-content; max-width:min(380px, calc(100vw - 32px)); padding:10px 12px;
+  background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.35); font-size:.85rem }
+:root[data-kit] .ramppop{ background:var(--k-tbar-bg, var(--panel)); border-color:var(--k-tbar-line, var(--line)) }
+.ramppop .prow{ display:flex; flex-wrap:wrap; align-items:center; gap:6px }
+.ramppop input[type=number]{ width:3.4rem; padding:.15rem .3rem; font-family:var(--f-mono); font-size:.8rem; background:var(--bg); color:var(--ink); border:1px solid var(--line); border-radius:4px }
+.ramppop .phint{ margin:.5rem 0 0; font-size:.75rem; color:var(--muted); max-width:30em }
+
 .strip{ display:flex; gap:2px; height:26px; align-items:stretch }
 .strip .st{ min-width:17px; padding:0 2px; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-size:.72rem; font-weight:600;
   color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:3px; transition:background .06s, color .06s }
@@ -1270,6 +1281,13 @@ svg.mpend-art{ width:auto; height:44px }
 /* String sub-panel: Auto on its own row, then the six strings */
 [data-skin="punk"] #tuner[data-state="max"] #tStrings button{ min-width:0; padding:0; font-size:1.389cqw; width:3.009cqw; height:3.009cqw; top:57.292cqw; display:flex; align-items:center; justify-content:center }
 [data-skin="punk"] #tuner[data-state="max"] #tStrings button:first-child{ left:12.500cqw; top:52.894cqw; width:6.597cqw; height:3.009cqw }
+[data-skin="punk"] #tuner[data-state="max"] .tref label.check{ top:52.894cqw; height:3.009cqw; display:flex; align-items:center; gap:0.463cqw; font-size:0; color:#ECEAE4 }
+[data-skin="punk"] #tuner[data-state="max"] .tref label.check::after{ font:500 1.100cqw "Oswald", var(--f-display); letter-spacing:.08em; text-transform:uppercase }
+[data-skin="punk"] #tuner[data-state="max"] .tref label.check:has(#tRef){ left:20.200cqw; width:5.600cqw } [data-skin="punk"] #tuner[data-state="max"] label.check:has(#tRef)::after{ content:"Hear" }
+[data-skin="punk"] #tuner[data-state="max"] .tref label.check:has(#tRefRep){ left:26.000cqw; width:7.000cqw } [data-skin="punk"] #tuner[data-state="max"] label.check:has(#tRefRep)::after{ content:"Repeat" }
+[data-skin="punk"] #tuner[data-state="max"] .tref .tog{ display:block; position:static; width:1.533cqw; height:2.123cqw; flex:none }
+[data-skin="punk"] #tuner[data-state="max"] .tref input{ width:100% !important; height:100% !important }
+[data-skin="punk"] #tuner[data-state="max"] label.check:has(#tRefRep:disabled){ opacity:.45 }
 [data-skin="punk"] #tuner[data-state="max"] #tStrings button:nth-child(2){ left:12.500cqw }
 [data-skin="punk"] #tuner[data-state="max"] #tStrings button:nth-child(3){ left:15.856cqw }
 [data-skin="punk"] #tuner[data-state="max"] #tStrings button:nth-child(4){ left:19.213cqw }
@@ -1536,7 +1554,9 @@ svg.mpend-art{ width:auto; height:44px }
     <div class="pbody">
       <div class="pgrp"><span class="label">String</span>
         <div id="tStrings" class="seg" role="group" aria-label="String lock"></div>
-        <p class="phint">Auto names whatever note it hears. Tap a string to tune only that one.</p></div>
+        <div class="prow tref"><label class="check"><input id="tRef" type="checkbox"><span class="tog" aria-hidden="true"></span> Hear the note</label>
+          <label class="check"><input id="tRefRep" type="checkbox"><span class="tog" aria-hidden="true"></span> Repeat</label></div>
+        <p class="phint">Auto names whatever note it hears. Tap a string to tune only that one; with Hear the note on, tapping it also plays that string's note.</p></div>
       <div class="pgrp"><span class="label">Instrument</span>
         <div class="prow"><label class="check"><input id="tBass" type="checkbox"><span class="tog" aria-hidden="true"></span> Bass</label>
           <label class="mgrp" id="tGtrWrap">Tuning <select id="tGtr" aria-label="Guitar tuning for the tuner"></select></label>
@@ -1564,10 +1584,10 @@ svg.mpend-art{ width:auto; height:44px }
       <div class="pgrp"><span class="label">Plays</span>
         <div class="prow"><div id="mMode" class="seg" role="group" aria-label="Metronome mode"><button data-mmode="alone">Alone</button><button data-mmode="linked">With chords</button></div>
           <label class="check"><input id="mCount" type="checkbox"><span class="tog" aria-hidden="true"></span> Count-in</label></div>
-        <p class="phint linked">Follows the progression's tempo and time signature. The footswitch and ▶ Play start both.</p></div>
-      <div class="pgrp alone"><span class="label">Tempo</span>
-        <div class="prow"><span class="mgrp"><button id="mSlower" class="btn-small mstep" aria-label="1 bpm slower">−</button><input id="mTempo" type="range" min="30" max="250" step="1" aria-label="Metronome tempo"><button id="mFaster" class="btn-small mstep" aria-label="1 bpm faster">+</button></span>
-          <label class="mgrp">Time <select id="mSig" aria-label="Metronome time signature"></select></label></div>
+        <p class="phint linked">Follows the progression's time signature. The footswitch and ▶ Play start both.</p></div>
+      <div class="pgrp"><span class="label">Tempo</span>
+        <div class="prow"><span class="mgrp"><button id="mSlower" class="btn-small mstep" aria-label="1 bpm slower">−</button><input id="mTempo" type="range" min="30" max="250" step="1" aria-label="Tempo"><button id="mFaster" class="btn-small mstep" aria-label="1 bpm faster">+</button></span>
+          <label class="mgrp alone">Time <select id="mSig" aria-label="Metronome time signature"></select></label></div>
         <div class="prow mgrp"><label class="check"><input id="mRamp" type="checkbox"><span class="tog" aria-hidden="true"></span> Ramp</label>
           to <input id="mRampTo" type="number" min="30" max="250" aria-label="Ramp target tempo"> by <input id="mRampBy" type="number" min="1" max="20" aria-label="Ramp step in bpm"> every <input id="mRampEvery" type="number" min="1" max="32" aria-label="Ramp every so many bars"> bars</div></div>
       <div class="pgrp"><span class="label">Sound</span>
@@ -1595,9 +1615,15 @@ svg.mpend-art{ width:auto; height:44px }
     <label class="field"><span class="label">Sound <span id="soundStatus" class="mono" style="text-transform:none;letter-spacing:0"></span></span><select id="sound"></select></label>
     <div class="field pat"><span class="label">Picking <span id="meter" class="mono"></span></span><div id="strip" class="strip" role="img"></div></div>
     <label class="field"><span class="label">Tempo <span id="bpmText" class="mono"></span></span>
-      <span class="tempo"><input id="bpm" type="range" min="40" max="160" step="2" value="88">
-        <span id="knob" class="knob" role="slider" tabindex="0" aria-label="Tempo" aria-valuemin="40" aria-valuemax="160"><span class="kring"></span><svg viewBox="0 0 64 64" aria-hidden="true"></svg><span class="kcap"></span></span></span></label>
-    <label class="check"><input id="loop" type="checkbox"><span class="tog" aria-hidden="true"></span> Loop</label>
+      <span class="tempo"><input id="bpm" type="range" min="30" max="250" step="1" value="88">
+        <span id="knob" class="knob" role="slider" tabindex="0" aria-label="Tempo" aria-valuemin="30" aria-valuemax="250"><span class="kring"></span><svg viewBox="0 0 64 64" aria-hidden="true"></svg><span class="kcap"></span></span></span></label>
+    <div class="tchecks"><label class="check"><input id="loop" type="checkbox"><span class="tog" aria-hidden="true"></span> Loop</label>
+    <div class="rampw"><label class="check"><input id="ramp" type="checkbox"><span class="tog" aria-hidden="true"></span> Ramp</label>
+      <button id="rampSet" class="btn-small rampset" aria-expanded="false" aria-controls="rampPop" title="Ramp settings"></button>
+      <div id="rampPop" class="ramppop" role="group" aria-label="Tempo ramp" hidden>
+        <div class="prow">to <input id="rTo" type="number" min="30" max="250" aria-label="Ramp target tempo"> bpm, by <input id="rBy" type="number" min="1" max="20" aria-label="Ramp step in bpm"> every <input id="rEvery" type="number" min="1" max="32" aria-label="Ramp every so many bars"> bars</div>
+        <p class="phint">Starts from the tempo you've set each time you press Play or Start, and goes back to it when you stop. Drives the chords, metronome and drummer together.</p>
+      </div></div></div>
   </div>
 </div>
 
@@ -2107,8 +2133,8 @@ function zoneFor(zs, midi){ return zs.find(z => midi>=z.lo && midi<=z.hi) || zs.
 
 /* One note on one string. A new note on the same string damps the one before, as a real string would. */
 /* mute: 'x' = dead scratch (fretting hand resting on the strings), 's' = staccato chop (chord choked straight away). */
-function pluck(midi, s, t, vel, mute){
-  const c = audio(), zs = soundReady[state.sound];
+function pluck(midi, s, t, vel, mute, bus){
+  const c = audio(), zs = soundReady[state.sound], out = bus || BUS;
   const src = c.createBufferSource(), g = c.createGain();
   if (zs){
     const z = zoneFor(zs, midi);
@@ -2122,11 +2148,12 @@ function pluck(midi, s, t, vel, mute){
     const dead = mute==='x', lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = dead ? 1100 : 3200; lp.Q.value = dead ? .5 : .7;
     g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(vel * (zs ? zoneFor(zs, midi).gain : 1) * (dead ? .7 : 1), t);
     g.gain.setTargetAtTime(0, t + (dead ? .012 : .1), dead ? .035 : .025);   // dead: a short pitched thunk, not a click
-    src.connect(lp); lp.connect(g); g.connect(BUS); src.start(t); src.stop(t + (dead ? .3 : .45));
-  } else { src.connect(g); g.connect(BUS); src.start(t); src.stop(t + (zs ? 6 : 3)); }
+    src.connect(lp); lp.connect(g); g.connect(out); src.start(t); src.stop(t + (dead ? .3 : .45));
+  } else { src.connect(g); g.connect(out); src.start(t); src.stop(t + (zs ? 6 : 3)); }
   const prev = ringing[s];
   if (prev && prev.t < t){ try{ prev.g.gain.setTargetAtTime(0, t, 0.015); }catch(_){} }
   ringing[s] = {g, t};
+  return g;
 }
 /* The pick brushing across muted strings: a faint, soft-edged wash of dark noise under the rake (kept quiet so it never reads as a snare). */
 let noiseBuf = null;
@@ -2272,11 +2299,34 @@ const clock = {
 /* ---------- Player: progression playback, one bar per chord, as a voice on the clock.
    A whole bar is booked at once, so tempo and pattern changes land on the next bar. ---------- */
 const player = { on:false, active:false, single:null, bar:0, nextBarTime:0, endTimer:null, fill:schedule, show:showEvent };
-const stepLen = () => 60/state.bpm/PATTERNS[state.pattern].div;
+const stepLen = () => 60/liveBpm()/PATTERNS[state.pattern].div;
+/* ---------- One tempo for everything: chords, metronome and drummer ----------
+   state.bpm is the tempo you set. While anything is playing, tempo.live is what's actually running: it starts at
+   state.bpm and, with Ramp on, moves toward the ramp target every so many bars. When everything stops it goes back. */
+const tempo = { live:null, shown:null, bars:0, timers:[] };
+const TEMPO_MIN = 30, TEMPO_MAX = 250;
+const liveBpm = () => tempo.live ?? state.bpm;
+function tempoBegin(){ if (tempo.live==null){ tempo.live = tempo.shown = state.bpm; tempo.bars = 0; } }
+function tempoEnd(){ if (!player.active && !metro.active && tempo.live!=null){ tempo.live = tempo.shown = null; tempo.timers.forEach(clearTimeout); tempo.timers = []; tempoShow(); } }
+/* Called once per bar by whichever voice leads (the progression if it's playing, else the metronome). at = when the next bar starts. */
+function rampBar(at){
+  if (!M.ramp || tempo.live==null) return;
+  tempo.bars++;
+  if (tempo.bars % M.rampEvery || tempo.live===M.rampTo) return;
+  const d = Math.sign(M.rampTo - tempo.live);
+  tempo.live = d > 0 ? Math.min(M.rampTo, tempo.live + M.rampBy) : Math.max(M.rampTo, tempo.live - M.rampBy);
+  const v = tempo.live;                                                  // the readout changes when that bar actually starts
+  tempo.timers.push(setTimeout(() => { if (tempo.live!=null){ tempo.shown = v; tempoShow(); } }, Math.max(0, (at - AC.currentTime)*1000)));
+}
+function tempoShow(){
+  const live = tempo.shown ?? state.bpm, el = $('bpmText'); if (!el) return;
+  el.textContent = tempo.live!=null && M.ramp && live!==M.rampTo ? `${live} → ${M.rampTo} bpm` : `${live} bpm`;
+}
 function startPlayback(single){
   stopPlayback();
-  const c = audio(); newBus();
+  const c = audio(); newBus(); tempoBegin();
   Object.assign(player, {single, bar:0, nextBarTime:c.currentTime+0.08});
+  if (single==null && metro.active) metroStart(player.nextBarTime);   // the metronome running alone re-starts on the progression's first bar
   if (single==null && metroLinked() && M.countIn){       // one bar of clicks before chord 1
     metroLinkBar(player.nextBarTime, state.pattern, stepLen(), true);
     player.nextBarTime += stepCount(state.pattern)*stepLen();
@@ -2305,17 +2355,18 @@ function schedule(){
     clock.post(player, ev);
     if (metroLinked()) metroLinkBar(t0, pat, sl, false);
     player.nextBarTime += stepCount(pat)*sl; player.bar++;
+    if (player.single==null) rampBar(player.nextBarTime);
   }
 }
 function endSoon(){
   clock.release(player);
   const left = Math.max(0, player.nextBarTime - AC.currentTime);
-  player.endTimer = setTimeout(() => { clock.drop(player); metroUnlink(); clearLit(); updatePlayButton(); }, left*1000 + 400);
+  player.endTimer = setTimeout(() => { clock.drop(player); metroUnlink(); clearLit(); updatePlayButton(); tempoEnd(); }, left*1000 + 400);
 }
 function stopPlayback(){
   clearTimeout(player.endTimer); player.endTimer = null;
   clock.drop(player); metroUnlink();
-  fadeBus(); clearLit(); updatePlayButton();
+  fadeBus(); clearLit(); updatePlayButton(); tempoEnd();
 }
 function showEvent(e){
   if (e.bar){
@@ -2333,16 +2384,17 @@ function showEvent(e){
   }
 }
 /* ---------- Metronome: a second voice on the same clock ----------
-   Alone: runs at its own tempo and time signature, with an optional tempo ramp.
+   Alone: runs at the shared tempo in its own time signature (the tempo counts crotchets, so in 6/8, 9/8 and 12/8
+   each dotted-crotchet beat is one and a half of them, the same pulse the 6/8 picking patterns use).
    With chords: books its clicks inside each bar the player books, so beats and count-in land exactly on the
    chord changes (one chord per bar), at the progression's tempo and meter. */
 const SIGS = { '2/4':{beats:2}, '3/4':{beats:3}, '4/4':{beats:4}, '5/4':{beats:5},
                '6/8':{beats:2, compound:true}, '9/8':{beats:3, compound:true}, '12/8':{beats:4, compound:true} };
 const SUBS = { none:'None', '8ths':'Eighths', '16ths':'Sixteenths', trip:'Triplets', swing:'Swing eighths' };
-const M = { on:false, mode:'alone', bpm:100, sig:'4/4', sub:'none', accent:true, countIn:false,
+const M = { on:false, mode:'alone', sig:'4/4', sub:'none', accent:true, countIn:false,
             ramp:false, rampTo:140, rampBy:2, rampEvery:4, vol:80, kit:'click', padX:0, padY:.5, variant:0, display:'row' };
 const METRO_KEY = 'fret-neighborhood-metronome';
-const metro = { on:false, active:false, next:0, bar:0, count:0, bpm:100, bus:null, fill:metroFill, show:metroShow };
+const metro = { on:false, active:false, next:0, bar:0, count:0, bus:null, fill:metroFill, show:metroShow };
 const metroLink = { on:false, active:false, bus:null, show:metroShow };     // screen events for clicks booked with chords
 const metroLinked = () => M.on && M.mode==='linked';
 
@@ -2505,31 +2557,27 @@ function fadeOut(g){ if (!g) return; try{ g.gain.setTargetAtTime(0, AC.currentTi
 function metroLinkBar(t0, pat, sl, countIn){
   const P = PATTERNS[pat];
   if (!metroLink.bus) metroLink.bus = newClickBus(BUS);      // rides on the playback bus, so Stop silences it too
-  bookBar(metroLink, metroLink.bus, t0, P.group*sl, stepCount(pat)/P.group, P.group===3, countIn, state.bpm, !countIn && player.bar===0);
+  bookBar(metroLink, metroLink.bus, t0, P.group*sl, stepCount(pat)/P.group, P.group===3, countIn, liveBpm(), !countIn && player.bar===0);
 }
 function metroUnlink(){ fadeOut(metroLink.bus); metroLink.bus = null; clock.drop(metroLink); metroIdle(); }
 
 /* Alone: its own voice on the clock. */
 function metroFill(){
   while (metro.next < clock.until()){
-    const S = SIGS[M.sig], beatLen = 60/metro.bpm, countIn = metro.count > 0;
-    bookBar(metro, metro.bus, metro.next, beatLen, S.beats, !!S.compound, countIn, metro.bpm, !countIn && metro.bar===0);
+    const S = SIGS[M.sig], bpm = liveBpm(), beatLen = 60/bpm*(S.compound ? 1.5 : 1), countIn = metro.count > 0;
+    bookBar(metro, metro.bus, metro.next, beatLen, S.beats, !!S.compound, countIn, bpm, !countIn && metro.bar===0);
     metro.next += S.beats*beatLen;
     if (countIn){ metro.count--; continue; }
     metro.bar++;
-    if (M.ramp && metro.bar % M.rampEvery===0 && metro.bpm!==M.rampTo){      // ramp lands on the next bar line
-      const dir = Math.sign(M.rampTo - metro.bpm);
-      metro.bpm = dir > 0 ? Math.min(M.rampTo, metro.bpm + M.rampBy) : Math.max(M.rampTo, metro.bpm - M.rampBy);
-    }
+    if (!player.on) rampBar(metro.next);                                   // the progression leads the ramp when it's playing
   }
 }
-function metroStart(){
-  metroStop();
-  const c = audio();
-  Object.assign(metro, {next:c.currentTime + 0.08, bar:0, count:M.countIn ? 1 : 0, bpm:M.bpm, bus:newClickBus(MASTER)});
+function metroStart(at){                       // at: start on this audio time (the progression's bar line), with no count-in
+  metroStop(); const c = audio(); tempoBegin();
+  Object.assign(metro, {next:at ?? c.currentTime + 0.08, bar:0, count:M.countIn && at==null ? 1 : 0, bus:newClickBus(MASTER)});
   clock.run(metro); metroButton();
 }
-function metroStop(){ if (metro.active || metro.bus){ clock.drop(metro); fadeOut(metro.bus); metro.bus = null; } metroIdle(); metroButton(); }
+function metroStop(){ if (metro.active || metro.bus){ clock.drop(metro); fadeOut(metro.bus); metro.bus = null; } metroIdle(); metroButton(); tempoEnd(); }
 /* The metronome pedal's footswitch: Start/Stop when alone; with chords it plays and stops the progression (clicks included). */
 function metroButton(){ const b = $('mPlay'); if (!b) return;
   const linked = M.mode==='linked', on = linked ? player.active : metro.active;
@@ -2578,7 +2626,7 @@ const METRO_DISPLAYS = {
         ${[-24,-16,-8,0,8,16,24].map(a => `<line class="sc" x1="50" y1="20" x2="50" y2="26" transform="rotate(${a} 50 78)"/>`).join('')}
         <g class="pg"><line class="arm" x1="50" y1="78" x2="50" y2="14"/><rect class="wt" x="44" y="30" width="12" height="9" rx="1.5"/></g><circle class="hub" cx="50" cy="78" r="3.2"/></svg>`;
       this.g = el.querySelector('.pg'); this.wt = el.querySelector('.wt'); this.a = 0; this.last = null; this.dir = 1; this.setWeight(); this.draw(0); },
-    setWeight(){ if (!this.wt) return; const bpm = metro.active ? metro.bpm : M.mode==='linked' ? state.bpm : M.bpm;
+    setWeight(){ if (!this.wt) return; const bpm = liveBpm();
       const f = 1 - (Math.max(30, Math.min(250, bpm)) - 30)/220;                              // slow = weight high up the arm
       if (this.art){ const P = SKIN.pend, [lo, hi] = P.slide || [.3, .85], d = P.armLen*(lo + (hi - lo)*f);
         this.wt.setAttribute('y', (this.piv[1] - d - this.wh/2).toFixed(1)); }
@@ -2626,6 +2674,7 @@ function metroShow(e){
   drawRow(e.beats, e.beat, e.countIn, e);
   $('mBpm').textContent = M.mode==='linked' ? `${e.bpm} bpm` : `${e.bpm} bpm${e.countIn ? ' · count' : ''}`;
 }
+const metroBpmText = () => `${liveBpm()} bpm`;
 function metroIdle(){ if (!metro.active && !(metroLinked() && player.active)) drawRow(metroBeats(), null, false); drawGroove(); }
 function metroMeter(){
   if (M.mode==='linked'){ const P = PATTERNS[state.pattern]; return {beats:stepCount(state.pattern)/P.group, compound:P.group===3, name:P.meter}; }
@@ -2652,10 +2701,11 @@ function renderMetro(){
   drawPad();
   $('mOn').checked = M.on;
   document.querySelectorAll('[data-mmode]').forEach(b => { const s = b.dataset.mmode===M.mode; b.classList.toggle('sel', s); b.setAttribute('aria-pressed', s); });
-  $('mTempo').value = M.bpm; $('mSig').value = M.sig; $('mSub').value = M.sub;
+  $('mTempo').value = state.bpm; $('mSig').value = M.sig; $('mSub').value = M.sub;
   $('mAccent').checked = M.accent; $('mCount').checked = M.countIn; $('mRamp').checked = M.ramp;
   $('mRampTo').value = M.rampTo; $('mRampBy').value = M.rampBy; $('mRampEvery').value = M.rampEvery; $('mVol').value = M.vol;
-  if (!metro.active) $('mBpm').textContent = M.mode==='linked' ? `${state.bpm} bpm` : `${M.bpm} bpm`;
+  if (!metro.active && !(metroLinked() && player.active)) $('mBpm').textContent = metroBpmText();
+  rampRender();
   metroIdle(); metroButton();
 }
 function metroSave(){ try{ const {on, ...keep} = M; localStorage.setItem(METRO_KEY, JSON.stringify(keep)); }catch(_){} }
@@ -2664,7 +2714,7 @@ function metroLoad(){
     const d = JSON.parse(localStorage.getItem(METRO_KEY) || 'null'); if (!d) return;
     const int = (v, lo, hi, def) => Number.isFinite(+v) && +v>=lo && +v<=hi ? Math.round(+v) : def;
     if (d.mode==='alone' || d.mode==='linked') M.mode = d.mode;
-    M.bpm = int(d.bpm, 30, 250, M.bpm); if (SIGS[d.sig]) M.sig = d.sig; if (SUBS[d.sub]) M.sub = d.sub;
+    if (SIGS[d.sig]) M.sig = d.sig; if (SUBS[d.sub]) M.sub = d.sub;
     M.accent = d.accent!==false; M.countIn = !!d.countIn; M.ramp = !!d.ramp;
     M.rampTo = int(d.rampTo, 30, 250, M.rampTo); M.rampBy = int(d.rampBy, 1, 20, M.rampBy); M.rampEvery = int(d.rampEvery, 1, 32, M.rampEvery);
     M.vol = int(d.vol, 0, 100, M.vol);
@@ -2725,7 +2775,7 @@ const TUNER_GUITAR = { ...TUNINGS,
   opene: {label:'Open E · E B E G♯ B E',         open:[40,47,52,56,59,64]},
   openc: {label:'Open C · C G C G C E',          open:[36,43,48,55,60,64]},
 };
-const T = { on:false, bass:false, bassTuning:'bass4', gtr:null, lock:null, sens:50, device:'', display:'numeric' };   // gtr null = follow the app's tuning
+const T = { on:false, bass:false, bassTuning:'bass4', gtr:null, lock:null, sens:50, device:'', display:'numeric', ref:false, refRep:false };   // gtr null = follow the app's tuning
 const TUNER_KEY = 'fret-neighborhood-tuner';
 const tuner = { stream:null, nodes:[], an:null, buf:null, raf:null, last:0, floor:.002, cal:null, hist:[], ref:null, cents:0, good:0, opening:false };
 let tunerNote = null;                                      // the note ringed on the neck
@@ -2779,9 +2829,29 @@ function tunerRelease(){
   tuner.nodes.forEach(n => { try{ n.disconnect(); }catch(_){} }); tuner.nodes = []; tuner.an = null;
   if (tuner.stream) tuner.stream.getTracks().forEach(t => t.stop()); tuner.stream = null;
 }
-function tunerOff(){ tunerRelease(); tuner.hist = []; tuner.ref = null; setTunerNote(null); renderTuner();
+function tunerOff(){ refStop(); tunerRelease(); tuner.hist = []; tuner.ref = null; setTunerNote(null); renderTuner();
   if (tunerDisp && tunerDisp.tick && tunerDisp.a!=null){ tunerDisp.a = -50; tunerDisp.v = 0; tunerDisp.put(); } }
 
+/* Reference note: with "Hear the note" on, tapping a string plays it in the app's guitar sound (bass mode plays the
+   bass string). The tuner stops listening while it rings, so it never tunes to its own reference. Repeat plays it
+   again every few seconds until you tap Auto, switch Hear off, or the tuner goes off. */
+const REF_LEN = 2.0, REF_EVERY = 3.4;
+const ref = { bus:null, timer:null, g:null };
+function refStop(){ clearTimeout(ref.timer); ref.timer = null;
+  if (ref.g && AC){ try{ ref.g.gain.cancelScheduledValues(AC.currentTime); ref.g.gain.setTargetAtTime(0, AC.currentTime, 0.03); }catch(_){} } ref.g = null; tuner.quietUntil = 0; }
+function refPlay(i){
+  refStop();
+  const m = tunerTargets()[i]; if (m==null) return;
+  const go = () => {
+    if (!T.ref || T.lock!==i) return;
+    const c = audio(); if (!ref.bus){ ref.bus = c.createGain(); ref.bus.gain.value = 1; ref.bus.connect(MASTER); }
+    const t = c.currentTime + 0.03, g = pluck(m, 'ref', t, .9, null, ref.bus);
+    try{ g.gain.setTargetAtTime(0, t + REF_LEN - 0.35, 0.09); }catch(_){}
+    ref.g = g; tuner.quietUntil = performance.now() + REF_LEN*1000 + 150; tuner.hist = [];
+    if (T.refRep) ref.timer = setTimeout(go, REF_EVERY*1000);
+  };
+  const ld = loadSound(state.sound); ld && ld.then ? ld.then(go, go) : go();
+}
 function tunerFrame(){
   tuner.raf = requestAnimationFrame(tunerFrame);
   const now = performance.now();
@@ -2789,6 +2859,7 @@ function tunerFrame(){
   if (now - tuner.last < 45) return; tuner.last = now;
   tunerLamp();
   if (player.active || metro.active){ tuner.hist = []; tunerShow(null, now, 'Paused while playing'); return; }
+  if (now < (tuner.quietUntil || 0)){ tuner.hist = []; tunerShow(null, now, ''); return; }
   tuner.an.getFloatTimeDomainData(tuner.buf);
   let x = tuner.buf, sr = AC.sampleRate;
   if (T.bass){ const h = new Float32Array(x.length >> 1); for (let i=0;i<h.length;i++) h[i] = 0.5*(x[2*i] + x[2*i+1]); x = h; sr /= 2; }
@@ -2824,7 +2895,7 @@ function tunerShow(m, now, why){
     if (why){ tunerStatus(why); el.classList.add('stale'); el.classList.remove('live','intune'); return; }
     if (tuner.ref!=null && now - tuner.good > 1500){ tuner.ref = null; tuner.hist = []; setTunerNote(null); drawTuner(); }
     else if (tuner.ref!=null) el.classList.add('stale');
-    if (tuner.ref==null && !tuner.cal) tunerStatus('Play a string');
+    if (tuner.ref==null && !tuner.cal) tunerStatus('');
     return;
   }
   tunerStatus('');
@@ -2937,7 +3008,7 @@ function renderTuner(){
     targets.map((m,i) => `<button data-tstr="${i}" class="${T.lock===i?'sel':''}" aria-pressed="${T.lock===i}" title="Lock to this string">${SHARP[m%12]}</button>`).join('');
   $('tBass').checked = T.bass; $('tBassWrap').style.display = T.bass ? '' : 'none'; $('tBassTuning').value = T.bassTuning;
   $('tGtrWrap').style.display = T.bass ? 'none' : ''; $('tGtr').value = tunerGtr();
-  $('tSens').value = T.sens;
+  $('tSens').value = T.sens; $('tRef').checked = T.ref; $('tRefRep').checked = T.refRep; $('tRefRep').disabled = !T.ref;
   if (!T.on){ tunerStatus(''); tuner.ref = null; }
   drawTuner();
 }
@@ -2948,6 +3019,7 @@ function tunerLoad(){
     T.bass = !!d.bass; if (BASS_TUNINGS[d.bassTuning]) T.bassTuning = d.bassTuning;
     if (d.sens>=0 && d.sens<=100) T.sens = Math.round(d.sens); if (typeof d.device==='string') T.device = d.device;
     if (['numeric','led','needle','strobe'].includes(d.display)) T.display = d.display;
+    T.ref = !!d.ref; T.refRep = !!d.refRep;
   }catch(_){}
 }
 
@@ -3329,8 +3401,8 @@ function renderTransport(){
   const m = PATTERNS[state.pattern].meter; lastPattern[m] = state.pattern;
   fillPatterns(m); renderMeters();
   $('pattern').value = state.pattern; renderStrip();
-  $('bpm').value = state.bpm; $('bpmText').textContent = `${state.bpm} bpm`;
-  const kb = $('knob'); kb.style.setProperty('--a', `${-135 + 270*(state.bpm-40)/120}deg`); kb.setAttribute('aria-valuenow', state.bpm); kb.setAttribute('aria-valuetext', `${state.bpm} beats per minute`);
+  $('bpm').value = state.bpm; tempoShow();
+  const kb = $('knob'); kb.style.setProperty('--a', `${-135 + 270*(state.bpm-TEMPO_MIN)/(TEMPO_MAX-TEMPO_MIN)}deg`); kb.setAttribute('aria-valuenow', state.bpm); kb.setAttribute('aria-valuetext', `${state.bpm} beats per minute`);
   $('loop').checked = state.loop;
   updatePlayButton(); renderMetro();
 }
@@ -3376,7 +3448,7 @@ function load(){
       if (PATTERNS[k]?.vars && Number.isInteger(i) && i>=0 && i<PATTERNS[k].vars.length) state.strums[k] = i; });
     if (SKINS[d.skin]) state.skin = d.skin;
     if (SOUNDS[d.sound]) state.sound = d.sound;
-    if (d.bpm>=40 && d.bpm<=160) state.bpm = d.bpm;
+    if (d.bpm>=30 && d.bpm<=250) state.bpm = Math.round(d.bpm);
     state.loop = !!d.loop; state.hand = HANDS.includes(d.hand) ? d.hand : (d.lefty ? 'left' : 'right');
     if (Number.isInteger(d.focus) && d.focus>=0) state.focus = Math.min(d.focus, state.prog.length-1);
     ENV = makeEnv(TUNINGS[d.tuning] ? d.tuning : 'std', d.capo>=0 && d.capo<=7 ? d.capo : 0, !!d.computed);
@@ -3457,9 +3529,12 @@ $('cards').addEventListener('pointerover', e => {
 $('cards').addEventListener('pointerleave', () => { if (hoverFocus!=null){ hoverFocus = null; renderNeck(); } });
 
 $('pattern').addEventListener('change', e => { state.pattern = e.target.value; renderStrip(); save(); });
-$('bpm').addEventListener('input', e => { state.bpm=+e.target.value; renderTransport(); save(); });
+$('bpm').addEventListener('input', e => setBpm(+e.target.value));
 /* Tempo knob: drag up or right to speed up, scroll, or use the arrow keys. It drives the same tempo slider underneath. */
-function setBpm(v){ v = Math.max(40, Math.min(160, Math.round(v/2)*2)); if (v===state.bpm) return; state.bpm = v; renderTransport(); save(); }
+/* The one tempo. Changing it while something plays takes effect from the next bar (and a ramp carries on from there). */
+function setBpm(v){ v = Math.max(TEMPO_MIN, Math.min(TEMPO_MAX, Math.round(v))); if (v===state.bpm) return; state.bpm = v;
+  if (tempo.live!=null) tempo.live = tempo.shown = v;
+  renderTransport(); save(); }
 (function(){
   const kb = $('knob'), svg = kb.querySelector('svg'); let t = '';
   for (let i=0; i<=10; i++){ const a = (-135 + 27*i) * Math.PI/180, r1 = 28, r2 = i%5 ? 30.5 : 31.5;
@@ -3467,13 +3542,13 @@ function setBpm(v){ v = Math.max(40, Math.min(160, Math.round(v/2)*2)); if (v===
   svg.innerHTML = t;
   let drag = null;
   kb.addEventListener('pointerdown', e => { drag = {x:e.clientX, y:e.clientY, v:state.bpm}; try{ kb.setPointerCapture(e.pointerId); }catch(_){} e.preventDefault(); });
-  kb.addEventListener('pointermove', e => { if (drag) setBpm(drag.v + ((e.clientX-drag.x) - (e.clientY-drag.y)) * 0.6); });
+  kb.addEventListener('pointermove', e => { if (drag) setBpm(drag.v + ((e.clientX-drag.x) - (e.clientY-drag.y)) * 0.8); });
   ['pointerup','pointercancel','lostpointercapture'].forEach(n => kb.addEventListener(n, () => { drag = null; }));
-  kb.addEventListener('wheel', e => { setBpm(state.bpm + (e.deltaY < 0 ? 2 : -2)); e.preventDefault(); }, {passive:false});
+  kb.addEventListener('wheel', e => { setBpm(state.bpm + (e.deltaY < 0 ? 1 : -1)); e.preventDefault(); }, {passive:false});
   kb.addEventListener('keydown', e => {
-    const step = {ArrowUp:2, ArrowRight:2, ArrowDown:-2, ArrowLeft:-2, PageUp:10, PageDown:-10}[e.key];
+    const step = {ArrowUp:1, ArrowRight:1, ArrowDown:-1, ArrowLeft:-1, PageUp:10, PageDown:-10}[e.key];
     if (step){ setBpm(state.bpm + step); e.preventDefault(); }
-    else if (e.key==='Home'){ setBpm(40); e.preventDefault(); } else if (e.key==='End'){ setBpm(160); e.preventDefault(); }
+    else if (e.key==='Home'){ setBpm(TEMPO_MIN); e.preventDefault(); } else if (e.key==='End'){ setBpm(TEMPO_MAX); e.preventDefault(); }
   });
 })();
 $('loop').addEventListener('change', e => { state.loop=e.target.checked; save(); });
@@ -3562,7 +3637,7 @@ $('mPlay').addEventListener('click', () => {
   if (metro.active){ metroStop(); return; }
   if (!M.on) metroPedal('min');                                  // Start also switches the metronome on
   if (M.kit==='drums') loadKit();
-  metroStart();
+  metroStart(player.on && player.single==null ? player.nextBarTime : undefined);   // chords playing: come in on their next bar line
 });
 $('mVar').innerHTML = [1,2,3,4,5,6].map(n => `<button data-mvar="${n-1}" title="Pattern ${n}">${n}</button>`).join('');
 $('mVar').addEventListener('click', e => { const b = e.target.closest('[data-mvar]'); if (!b) return; M.variant = +b.dataset.mvar; drawGroove(); metroSave(); });
@@ -3582,18 +3657,30 @@ $('mKit').addEventListener('click', e => { const b = e.target.closest('[data-mki
     M.padX = Math.max(0, Math.min(1, M.padX + d[0])); M.padY = Math.max(0, Math.min(1, M.padY + d[1])); drawPad(); metroSave(); e.preventDefault(); });
 })();
 $('mMode').addEventListener('click', e => { const b = e.target.closest('[data-mmode]'); if (!b || b.dataset.mmode===M.mode) return; M.mode = b.dataset.mmode; metroApply(); metroSave(); });
-function setMetroBpm(v){ M.bpm = Math.max(30, Math.min(250, Math.round(v))); $('mTempo').value = M.bpm;
-  if (metro.active) metro.bpm = M.bpm; else $('mBpm').textContent = `${M.bpm} bpm`; metroSave(); }
-$('mTempo').addEventListener('input', e => setMetroBpm(+e.target.value));
-$('mSlower').addEventListener('click', () => setMetroBpm(M.bpm - 1));
-$('mFaster').addEventListener('click', () => setMetroBpm(M.bpm + 1));
+$('mTempo').addEventListener('input', e => setBpm(+e.target.value));
+$('mSlower').addEventListener('click', () => setBpm(state.bpm - 1));
+$('mFaster').addEventListener('click', () => setBpm(state.bpm + 1));
 $('mSig').addEventListener('change', e => { M.sig = e.target.value; metroIdle(); metroSave(); });
 $('mSub').addEventListener('change', e => { M.sub = e.target.value; metroSave(); });
 $('mAccent').addEventListener('change', e => { M.accent = e.target.checked; metroSave(); });
 $('mCount').addEventListener('change', e => { M.countIn = e.target.checked; metroSave(); });
-$('mRamp').addEventListener('change', e => { M.ramp = e.target.checked; metroSave(); });
-[['mRampTo','rampTo',30,250], ['mRampBy','rampBy',1,20], ['mRampEvery','rampEvery',1,32]].forEach(([id, k, lo, hi]) =>
-  $(id).addEventListener('change', e => { const v = Math.round(+e.target.value); M[k] = Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : M[k]; e.target.value = M[k]; metroSave(); }));
+/* Ramp: one setting, shown in two places (the transport bar's Ramp pop-up and the metronome's full screen). */
+function rampRender(){
+  ['ramp','mRamp'].forEach(id => $(id).checked = M.ramp);
+  [['rTo','mRampTo','rampTo'], ['rBy','mRampBy','rampBy'], ['rEvery','mRampEvery','rampEvery']].forEach(([a, b, k]) => { $(a).value = M[k]; $(b).value = M[k]; });
+  const b = $('rampSet'); b.hidden = !M.ramp; b.textContent = `→ ${M.rampTo}`; b.setAttribute('aria-label', `Ramp settings: to ${M.rampTo} bpm`);
+  tempoShow();
+}
+function rampPop(open){ const p = $('rampPop'); p.hidden = !open; $('rampSet').setAttribute('aria-expanded', open); if (!open) return;
+  const r = $('ramp').closest('.rampw').getBoundingClientRect(), w = p.offsetWidth;          // sits just above the Ramp switch, kept on screen
+  p.style.left = Math.max(16, Math.min(innerWidth - w - 16, r.left)) + 'px'; $('rTo').focus(); }
+['ramp','mRamp'].forEach(id => $(id).addEventListener('change', e => { M.ramp = e.target.checked; rampRender(); metroSave();
+  if (id==='ramp') rampPop(M.ramp); }));
+$('rampSet').addEventListener('click', () => rampPop($('rampPop').hidden));
+document.addEventListener('pointerdown', e => { if (!$('rampPop').hidden && !e.target.closest('.rampw')) rampPop(false); });
+document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('rampPop').hidden){ rampPop(false); $('rampSet').focus(); } });
+[['rTo','rampTo',30,250], ['rBy','rampBy',1,20], ['rEvery','rampEvery',1,32], ['mRampTo','rampTo',30,250], ['mRampBy','rampBy',1,20], ['mRampEvery','rampEvery',1,32]].forEach(([id, k, lo, hi]) =>
+  $(id).addEventListener('change', e => { const v = Math.round(+e.target.value); M[k] = Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : M[k]; rampRender(); metroSave(); }));
 /* The page padding follows the transport bar's real height, so the bar never covers the bottom of the page */
 try{ new ResizeObserver(() => document.documentElement.style.setProperty('--tbar-h', document.querySelector('.tbar').offsetHeight + 'px')).observe(document.querySelector('.tbar')); }catch(_){}
 $('mVol').addEventListener('input', e => { M.vol = +e.target.value; metroSave(); });
@@ -3605,7 +3692,13 @@ if (M.kit==='drums') loadKit();
 /* Tuner controls */
 $('tOn').addEventListener('change', e => tunerPedal(e.target.checked ? 'min' : 'off'));
 $('tStrings').addEventListener('click', e => { const b = e.target.closest('[data-tstr]'); if (!b) return;
-  T.lock = b.dataset.tstr==='auto' || T.lock===+b.dataset.tstr ? null : +b.dataset.tstr; tuner.hist = []; tuner.ref = null; setTunerNote(null); renderTuner(); renderNeck(); });
+  const i = b.dataset.tstr==='auto' ? null : +b.dataset.tstr;
+  // with Hear the note on, tapping the locked string plays it again rather than unlocking (Auto unlocks)
+  T.lock = i==null || (T.lock===i && !T.ref) ? null : i; tuner.hist = []; tuner.ref = null; setTunerNote(null); renderTuner(); renderNeck();
+  if (T.ref && T.lock!=null) refPlay(T.lock); else refStop(); });
+$('tRef').addEventListener('change', e => { T.ref = e.target.checked; tunerSave(); renderTuner(); if (T.ref && T.lock!=null) refPlay(T.lock); else refStop(); });
+$('tRefRep').addEventListener('change', e => { T.refRep = e.target.checked; tunerSave();
+  if (!T.refRep){ clearTimeout(ref.timer); ref.timer = null; } else if (T.ref && T.lock!=null) refPlay(T.lock); });
 $('tBass').addEventListener('change', e => { T.bass = e.target.checked; T.lock = null; tunerSave(); if (T.on) tunerOpen(); renderTuner(); });
 $('tBassTuning').innerHTML = Object.entries(BASS_TUNINGS).map(([k,v]) => `<option value="${k}">${v.label}</option>`).join('');
 $('tBassTuning').addEventListener('change', e => { T.bassTuning = e.target.value; T.lock = null; tunerSave(); renderTuner(); });
