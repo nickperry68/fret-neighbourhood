@@ -1050,6 +1050,7 @@ svg.mpend-art{ width:auto; height:44px }
    Where the full-screen page or its groups are light, put the page's own dark text back. */
 [data-skin="parchment"] .pedal[data-state="max"]{ --ink:#2B2116; --muted:#6B5A42; --line:rgba(60,45,25,.2); --k-caption:#6B5A42; color:var(--ink) }
 [data-skin="luthier"] .pedal[data-state="max"]{ --ink:#2A1E14; --muted:#6B5640; --line:rgba(60,40,22,.22); --k-caption:#6B5640; color:var(--ink) }
+[data-skin="foundry"] .pedal[data-state="max"] .pgrp{ background-size:33.2px 25.2px }   /* same tread-plate scale as the main panels */
 [data-skin="punk"] .pedal[data-state="max"] .pgrp{ border-width:24px; border-image:var(--k-panel) var(--k-panel-slice) fill / 24px stretch; background:none }
 /* batch 3–4 pedal tokens */
 :root[data-skin="foundry"]{ --k-pedal-slice:60; --k-pedal-bw:13px; --k-pedal-bwmax:30px; --k-pedal-ink:#E9EDF0; --k-pedal-muted:#C5CACE; --k-gauge-ink:#1A1C1E }
@@ -1439,6 +1440,107 @@ svg.mpend-art{ width:auto; height:44px }
 /* punk title: Nick's spray-painted logo (title.webp, 900×302); the words stay in the heading for screen readers */
 [data-skin="punk"] h1{ width:min(100%, 470px); aspect-ratio:900/302; height:auto; max-width:100%; padding:0; margin:-6px 0 -18px;
   background:var(--k-title) left top/contain no-repeat; color:transparent; font-size:0; line-height:0; overflow:hidden; filter:drop-shadow(0 3px 4px rgba(0,0,0,.6)) }
+
+/* ---------- Phone (≤600px wide): two modes over the same page. data-phone="play" = one fixed screen, no scrolling, for a phone on a
+   stand: title strip, the neck zoomed to the frets the progression uses, the chord row, the current and next chord, and a slim
+   transport. data-phone="build" = the full page, scrolling, for setting things up; the transport flows at the end as the last racks.
+   The Edit / Play mode button switches between them. Desktop and tablets never see any of this. ---------- */
+:root:not([data-phone]) .modebtn, :root:not([data-phone]) .pback{ display:none !important }
+:root[data-phone] [aria-label="Changes"], :root[data-phone] .wrap > footer{ display:none }
+.pback[hidden]{ display:none }
+/* --- play mode --- */
+:root[data-phone="play"], :root[data-phone="play"] body{ height:100%; overflow:hidden; overscroll-behavior:none }
+:root[data-phone="play"] .wrap{ height:calc(100dvh - var(--tbar-h, 150px)); overflow:hidden; gap:8px; flex-wrap:nowrap;
+  padding:calc(env(safe-area-inset-top, 0px) + 8px) 10px 8px; padding-block-end:8px }
+:root[data-phone="play"] .wrap > *{ flex:none; min-height:0 }
+:root[data-phone="play"] header{ flex-wrap:nowrap; align-items:center; gap:8px }
+:root[data-phone="play"] header > div:first-child{ min-width:0; flex:1 1 auto }
+:root[data-phone="play"] :is(#tuningEyebrow, #reset, .skinpick, header p.note){ display:none }
+:root[data-phone="play"] header > div:last-child{ flex:none }
+:root[data-phone="play"] h1{ font-size:1.45rem; max-width:100%; white-space:nowrap }
+:root[data-phone="play"][data-kit~="nameplate"] h1{ font-size:1.05rem; padding-block:.35rem; padding-inline:1.4rem }
+:root[data-phone="play"][data-skin="punk"] h1{ width:auto; height:40px; aspect-ratio:900/302; margin:0 }
+:root[data-phone] section[aria-label="Neck"]{ padding:6px 8px }
+:root[data-phone="play"][data-kit~="panel"] .panel{ border-width:13px; border-image-width:13px }
+:root[data-phone="play"] section[aria-label="Neck"] > div:first-child{ display:none }
+:root[data-phone="play"] #neck{ cursor:default }
+:root[data-phone="play"] #neck svg{ margin:0 auto }
+@media (max-height:720px){
+  :root[data-phone="play"] .tbar{ zoom:.82 }
+  :root[data-phone="play"] #slots .slot{ zoom:.85 }
+  :root[data-phone="play"] .wrap{ gap:6px }
+  :root[data-phone="play"] #cards .card:not(.psheet) .cname{ font-size:1.5rem }
+  :root[data-phone="play"] .pedals{ padding-top:5px }
+  :root[data-phone="play"] .tbar-in{ padding-block:3px 5px }
+}
+:root[data-phone="play"] section[aria-label="Progression and style"]{ padding:6px 8px; gap:0 }
+:root[data-phone="play"] section[aria-label="Progression and style"] > div:last-child,
+:root[data-phone="play"] section[aria-label="Progression and style"] > div > .label,
+:root[data-phone="play"] :is(#addToggle, #libToggle, #library, #builder, #slots .rm){ display:none }
+:root[data-phone="play"] #slots{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; gap:6px; padding:2px }
+:root[data-phone="play"] #slots::-webkit-scrollbar{ display:none }
+:root[data-phone="play"] #slots .slot{ flex:none }
+:root[data-phone="play"] #slots .slot .nm{ padding-inline:.7rem }
+:root[data-phone="play"] #slots .slot.pslotnow{ outline:3px solid var(--accent); outline-offset:1px }
+:root[data-phone="play"] section[aria-label="Chord voicings"]{ flex:1 1 0; min-height:0; gap:0 }
+:root[data-phone="play"] section[aria-label="Chord voicings"] > div:first-child{ display:none }
+:root[data-phone="play"] #cards{ height:100%; grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-rows:minmax(0,1fr); gap:8px }
+:root[data-phone="play"] #cards .card{ display:none; min-height:0; overflow:hidden; cursor:pointer }
+:root[data-phone="play"] #cards .card:is(.pnow, .pnext, .psheet){ display:flex }
+:root[data-phone="play"] #cards .card.pnow{ order:-2 } :root[data-phone="play"] #cards .card.pnext{ order:-1; opacity:.78 }
+:root[data-phone="play"] #cards .card:not(.psheet) > :not(:first-child):not(.diagram){ display:none }
+:root[data-phone="play"] #cards .card:not(.psheet) .diagram{ flex:1 1 0; min-height:0; align-items:center }
+:root[data-phone="play"] #cards .card:not(.psheet) .diagram svg{ width:auto; height:100%; max-width:100%; max-height:100% }
+:root[data-phone="play"] #cards .card:not(.psheet) .cname{ font-size:2rem }
+:root[data-phone="play"] #cards .card:not(.psheet) .badge{ display:none }
+:root[data-phone="play"] #cards .card.pnext:not(.psheet) .cname::before{ content:"next "; font-family:var(--f-mono); font-size:.62rem; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); vertical-align:middle; margin-right:.2em }
+/* tapping a card opens it as a sheet: the full card with its alternatives and Play chord */
+:root[data-phone="play"] #cards .card.psheet{ position:fixed; left:10px; right:10px; bottom:calc(env(safe-area-inset-bottom, 0px) + 10px); z-index:71;
+  max-height:calc(100dvh - 90px); overflow:auto; cursor:default; opacity:1; box-shadow:0 10px 40px rgba(0,0,0,.6) }
+:root[data-phone="play"] #cards .card.psheet .diagram svg{ max-width:180px }
+.pback{ position:fixed; inset:0; z-index:70; background:rgba(0,0,0,.55); display:flex; justify-content:flex-end; align-items:flex-start;
+  padding:calc(env(safe-area-inset-top, 0px) + 12px) 12px 0 }
+/* the transport: Tune, the metronome's lamps, Play, tempo and Loop; everything else is a setting, so it lives in build mode */
+:root[data-phone="play"] .tbar-in > :is(.now, .field:not(:has(.tempo)), #strumField){ display:none }
+:root[data-phone="play"] .rampw{ display:none }
+:root[data-phone="play"] .tbar-in{ flex-wrap:nowrap; justify-content:space-between; gap:10px; padding:6px 12px 8px }
+:root[data-phone="play"] .tbar-in .field:has(.tempo){ flex-direction:row; align-items:center; gap:6px }
+/* phones of every width: nothing may be wider than the screen (one overflowing item widens the whole page on a phone,
+   and then every fixed and centred thing lines up with the wider page instead of the screen) */
+:root[data-phone] #more{ width:100%; max-width:100% }
+:root[data-phone] #more > div{ min-width:0 !important; grid-template-columns:repeat(2, minmax(0,1fr)) !important; gap:12px }
+:root[data-phone] #more :is(.field, .selwrap, select){ min-width:0; max-width:100% }
+:root[data-phone] #more select{ width:100% }
+:root[data-phone] h1{ max-width:100%; overflow-wrap:anywhere }
+@media (max-width:400px){ :root[data-phone="build"] h1{ font-size:1.45rem } }
+/* the voicing-style dial is drawn 300px wide; shrink the whole thing to fit narrow panels */
+@media (max-width:430px){ :root[data-phone][data-kit~="chickenhead"] #styles{ zoom:.9 } }
+@media (max-width:390px){ :root[data-phone][data-kit~="chickenhead"] #styles{ zoom:.8 } }
+@media (max-width:350px){ :root[data-phone][data-kit~="chickenhead"] #styles{ zoom:.72 } }
+:root[data-phone] .pedal:not([data-state="max"]){ cursor:pointer }
+:root[data-phone] .pedal[data-state="max"] .tind{ max-width:100%; min-width:0 }
+:root[data-phone] .pedal[data-state="max"] .tind > :not(.tend){ min-width:0; flex:0 1 auto }
+:root[data-phone] .pedal[data-state="max"] .tstatus{ white-space:normal; overflow-wrap:anywhere; max-width:100% }
+:root[data-phone="play"] .tbar-in .field:has(.tempo) .label{ white-space:nowrap }
+:root[data-phone="play"] .tbar-in .field:has(.tempo) input[type=range]{ width:90px }
+:root[data-phone="build"][data-skin="neon"] h1{ font-size:1.55rem }
+:root[data-phone="play"] .pedals{ flex-wrap:nowrap; padding:8px 10px 0; gap:8px }
+:root[data-phone="play"] #tuner:not([data-state="max"]){ flex:none; padding-inline:2px; gap:0 }
+:root[data-phone="play"] #tuner:not([data-state="max"]) > :not(.pfoot){ display:none }
+:root[data-phone="play"] #tuner:not([data-state="max"]) > .pfoot{ display:inline-flex }
+:root[data-phone="play"] #tuner:not([data-state="max"]) .pfoot .fl{ display:inline-flex }
+:root[data-phone="play"] #metro:not([data-state="max"]){ flex:1 1 0; min-width:0; flex-wrap:nowrap }
+:root[data-phone="play"] #metro:not([data-state="max"]) :is(.mgroove, .pzoom){ display:none }
+:root[data-phone="play"] #metro:not([data-state="max"]) .pdisp{ min-width:0; overflow:hidden }
+/* --- build mode: the whole page scrolls; the transport and pedals are the last racks, not a fixed bar --- */
+:root[data-phone="build"] .tbar{ position:static; box-shadow:none }
+:root[data-phone="build"] .wrap, :root[data-phone="build"][data-pedals] .wrap{ padding-block-end:16px }
+:root[data-phone="build"] .tbar{ padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 76px) }
+:root[data-phone="build"] .rampw{ position:relative }
+:root[data-phone="build"] .ramppop{ position:absolute; bottom:calc(100% + 6px); left:auto; right:0 }
+:root[data-phone="build"] #modeBtn{ position:fixed; right:14px; bottom:calc(env(safe-area-inset-bottom, 0px) + 14px); z-index:40;
+  padding:.7rem 1.1rem; font-size:1rem; box-shadow:0 6px 18px rgba(0,0,0,.45) }
 </style>
 
 <div class="wrap flex flex-col gap-5">
@@ -1448,7 +1550,7 @@ svg.mpend-art{ width:auto; height:44px }
       <h1>Fret Neighborhood</h1>
     </div>
     <div class="flex flex-col items-end gap-2">
-      <div class="flex items-center gap-3"><button id="reset" class="btn-small" title="Back to the starting progression and settings">Reset</button>
+      <div class="flex items-center gap-3"><button id="modeBtn" class="btn-small modebtn">Edit</button><button id="reset" class="btn-small" title="Back to the starting progression and settings">Reset</button>
       <label class="skinpick"><span class="label">Skin</span><select id="skin"></select></label></div>
       <p class="note" style="max-width:46ch;text-align:right">Park your hand on the neck, build a progression, and every chord is re-voiced to stay in your zone.</p>
     </div>
@@ -1536,6 +1638,7 @@ svg.mpend-art{ width:auto; height:44px }
   </footer>
 </div>
 
+<div id="pBack" class="pback" hidden><button id="pBackDone" class="btn-small">Done</button></div>
 <div class="tbar" role="region" aria-label="Playback">
 <div id="pedals" class="pedals" role="group" aria-label="Tuner and metronome">
   <section id="tuner" class="pedal" data-state="off" role="group" aria-label="Tuner">
@@ -3229,7 +3332,28 @@ function neckFocus(){
 function renderNeck(){
   const capo = ENV.capo, [zl,zh] = zoneRange(state.zone), aL = zl+capo, aH = Math.min(zh+capo, NECK_FRETS);
   const fi = neckFocus(), fc = state.prog[fi], fv = current[fi];
-  let o = `<svg viewBox="0 0 ${VBW} ${VBH}" aria-hidden="true">`;
+  // phone play mode: zoom to the frets the whole progression uses (plus your zone), at least five frets, so it holds still while you play
+  let vb = `0 0 ${VBW} ${VBH}`, zoomX0 = null;
+  if (document.documentElement.dataset.phone==='play'){
+    let lo = aL, hi = aH, open = false;
+    current.forEach(v => v && v.f.forEach(f => { if (f>0){ lo = Math.min(lo, f+capo); hi = Math.max(hi, f+capo); } else if (f===0) open = true; }));
+    if (open && capo) lo = Math.min(lo, capo+1);
+    while (hi-lo+1 < 5){ if (hi < NECK_FRETS) hi++; else lo--; }
+    lo = Math.max(1, lo);
+    const x0 = (lo<=1 && !capo) || (open && !capo) ? NUT-72 : wireX(lo-1)-10, x1 = Math.min(VBW, wireX(hi)+10), y0 = NT-12, y1 = VBH-4;
+    zoomX0 = x0; vb = `${(neckMirrored() ? VBW-x1 : x0).toFixed(1)} ${y0} ${(x1-x0).toFixed(1)} ${y1-y0}`;
+  } else if (document.documentElement.dataset.phone==='build'){
+    // phone build mode: about seven frets round your zone, rail included; it holds still while you drag, then re-centres
+    if (neckFrozenVB) vb = neckFrozenVB;
+    else {
+      let lo = Math.max(1, aL-1), hi = Math.min(NECK_FRETS, aH+1);
+      while (hi-lo+1 < 7){ if (hi < NECK_FRETS) hi++; else lo--; }
+      lo = Math.max(1, lo);
+      const x0 = lo<=1 ? NUT-72 : wireX(lo-1)-10, x1 = Math.min(VBW, wireX(hi)+10);
+      vb = `${(neckMirrored() ? VBW-x1 : x0).toFixed(1)} 0 ${(x1-x0).toFixed(1)} ${VBH-2}`;
+    }
+  }
+  let o = `<svg viewBox="${vb}" aria-hidden="true">`;
   // capo rail
   o += `<rect x="${NUT-62}" y="${RAIL_Y}" width="${wireX(7)-NUT+80}" height="${RAIL_H}" rx="${RAIL_H/2}" fill="var(--rail)"/>`;
   // headstock and neck
@@ -3315,7 +3439,11 @@ function renderNeck(){
     const inz = n>=aL && n<=aH;
     o += `<text x="${(wireX(n-1)+wireX(n))/2}" y="${NT+NH+26}" text-anchor="middle" font-family="var(--f-mono)" font-size="12" font-weight="${inz?600:400}" fill="${inz?'var(--zone)':'var(--muted)'}">${n}</text>`;
   }
+  if (zoomX0!=null && capo) o += `<text x="${zoomX0+8}" y="${NT-1}" font-family="var(--f-mono)" font-size="10" font-weight="700" fill="var(--capo-ink)" opacity=".9">CAPO ${capo}</text>`;
   $('neck').innerHTML = mirrorSVG(o + `</svg>`, VBW, neckMirrored());
+  if (zoomX0!=null){ const [, , w, h] = vb.split(' ').map(Number), maxH = innerHeight * (innerHeight <= 720 ? 0.17 : 0.24);   // keep room for the cards
+    $('neck').firstChild.style.maxWidth = Math.round(maxH * w / h) + 'px'; }
+  markPhoneCards();
   $('neckInfo').innerHTML = fc
     ? `Showing <b style="font-family:var(--f-display);font-size:1.15rem">${chordName(fc)}</b> <span class="note">${fv ? '· ' + fv.n : ''} · <span class="rootkey" aria-hidden="true"></span>square = root</span>`
     : `<span class="note">Add a chord to see it on the neck.</span>`;
@@ -3498,8 +3626,10 @@ function setZone(z){ z = Math.max(1, Math.min(maxZone(), z)); if (z===state.zone
 
 /* Neck: drag the zone along the frets, or the capo along its rail */
 const neckEl = $('neck');
-let drag = null;
-function svgPoint(e){ const r = neckEl.getBoundingClientRect(), fx = (e.clientX - r.left)/r.width; return {x:(neckMirrored() ? 1-fx : fx)*VBW, y:(e.clientY - r.top)/r.height*VBH}; }
+let drag = null, neckFrozenVB = null;
+function svgPoint(e){ const r = neckEl.getBoundingClientRect(), sv = neckEl.querySelector('svg'), b = sv && sv.viewBox.baseVal;
+  const X = (b ? b.x : 0) + (e.clientX - r.left)/r.width*(b ? b.width : VBW), Y = (b ? b.y : 0) + (e.clientY - r.top)/r.height*(b ? b.height : VBH);
+  return {x: neckMirrored() ? VBW - X : X, y: Y}; }
 function fretAt(x){ for (let n=1; n<=NECK_FRETS; n++) if (x < wireX(n)) return n; return NECK_FRETS; }
 function capoAt(x){ let best = 0, bd = Infinity; for (let c=0; c<=7; c++){ const d = Math.abs(x - capoX(c)); if (d < bd){ bd = d; best = c; } } return best; }
 function moveDrag(x){
@@ -3507,6 +3637,8 @@ function moveDrag(x){
   else setZone(fretAt(Math.max(x, NUT+1)) - ENV.capo);
 }
 neckEl.addEventListener('pointerdown', e => {
+  if (isPlayMode()) return;
+  if (document.documentElement.dataset.phone==='build'){ const sv = neckEl.querySelector('svg'); neckFrozenVB = sv ? sv.getAttribute('viewBox') : null; }
   const p = svgPoint(e);
   const onCapo = skinImg('capo') && Math.abs(p.x - capoX(ENV.capo)) < 13 && p.y < NT+NH+10;
   drag = (p.y < RAIL_Y + RAIL_H + 6 || onCapo) ? 'capo' : 'zone';
@@ -3514,7 +3646,7 @@ neckEl.addEventListener('pointerdown', e => {
   moveDrag(p.x); e.preventDefault();
 });
 neckEl.addEventListener('pointermove', e => { if (drag) moveDrag(svgPoint(e).x); });
-['pointerup','pointercancel','lostpointercapture'].forEach(t => neckEl.addEventListener(t, () => { drag = null; }));
+['pointerup','pointercancel','lostpointercapture'].forEach(t => neckEl.addEventListener(t, () => { drag = null; if (neckFrozenVB){ neckFrozenVB = null; renderNeck(); } }));
 neckEl.addEventListener('keydown', e => {
   const up = neckMirrored() ? 'ArrowLeft' : 'ArrowRight', down = neckMirrored() ? 'ArrowRight' : 'ArrowLeft';
   if (e.key===up || e.key==='ArrowUp'){ setZone(state.zone+1); e.preventDefault(); }
@@ -3523,6 +3655,7 @@ neckEl.addEventListener('keydown', e => {
   else if (e.key==='End'){ setZone(maxZone()); e.preventDefault(); }
 });
 $('cards').addEventListener('pointerover', e => {
+  if (e.pointerType==='touch' || isPlayMode()) return;
   const c = e.target.closest('.card'); const i = c ? +c.dataset.i : null;
   if (i !== hoverFocus){ hoverFocus = i; renderNeck(); }
 });
@@ -3762,6 +3895,52 @@ document.addEventListener('keydown', e => {
   else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
 });
 
+/* ---------- Phone: play mode (one fixed screen for a phone on a stand) and build mode (the full page) ---------- */
+const PHONE_MQ = matchMedia('(max-width: 600px)'), PHONE_KEY = 'fret-neighborhood-phone';
+let phoneMode = 'play'; try{ if (localStorage.getItem(PHONE_KEY)==='build') phoneMode = 'build'; }catch(_){}
+let sheetIdx = null;
+function isPlayMode(){ return document.documentElement.dataset.phone==='play'; }
+function markPhoneCards(){
+  const n = state.prog.length, play = player.active && player.nowIdx!=null;
+  const now = play ? player.nowIdx : Math.min(state.focus, Math.max(0, n-1));
+  document.querySelectorAll('#cards .card').forEach(c => { const i = +c.dataset.i;
+    c.classList.toggle('pnow', i===now); c.classList.toggle('pnext', n>1 && i===(now+1)%n); c.classList.toggle('psheet', i===sheetIdx); });
+  document.querySelectorAll('#slots .slot').forEach((el, k) => el.classList.toggle("pslotnow", play && k===player.nowIdx));
+}
+function openSheet(i){ sheetIdx = i; $('pBack').hidden = false; markPhoneCards(); }
+function closeSheet(){ if (sheetIdx==null) return; sheetIdx = null; $('pBack').hidden = true; markPhoneCards(); }
+function applyPhone(){
+  const r = document.documentElement;
+  if (PHONE_MQ.matches) r.dataset.phone = phoneMode; else delete r.dataset.phone;
+  $('modeBtn').textContent = phoneMode==='play' ? 'Edit' : '▶ Play mode';
+  $('modeBtn').setAttribute('aria-label', phoneMode==='play' ? 'Edit: build the progression and change settings' : 'Back to play mode');
+  if (!isPlayMode()) closeSheet();
+  hoverFocus = null; renderNeck(); keepAwake();
+}
+/* play mode keeps the screen on (a phone on a music stand shouldn't dim mid-song); build mode lets it sleep */
+let wakeLock = null;
+async function keepAwake(){
+  const want = isPlayMode() && document.visibilityState==='visible';
+  try{
+    if (want && !wakeLock && navigator.wakeLock){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); }
+    else if (!want && wakeLock){ await wakeLock.release(); wakeLock = null; }
+  }catch(_){ wakeLock = null; }
+}
+document.addEventListener('visibilitychange', keepAwake);
+$('modeBtn').addEventListener('click', () => { phoneMode = phoneMode==='play' ? 'build' : 'play';
+  try{ localStorage.setItem(PHONE_KEY, phoneMode); }catch(_){} window.scrollTo(0, 0); applyPhone(); });
+$('cards').addEventListener('click', e => { if (!isPlayMode() || e.target.closest('button, summary')) return;
+  const c = e.target.closest('.card'); if (c && !c.classList.contains('psheet')) openSheet(+c.dataset.i); });
+$('pBack').addEventListener('click', closeSheet);
+/* on a phone the pedals are small, so tapping anywhere on one (except its switch or footswitch) opens it full screen */
+['tuner','metro'].forEach(id => $(id).addEventListener('click', e => {
+  if (!document.documentElement.dataset.phone || PEDAL[id]==='max') return;
+  if (e.target.closest('input, .tog, button, .pdisp')) return;
+  e.preventDefault(); (id==='tuner' ? tunerPedal : metroPedal)('max');
+}));
+document.addEventListener('keydown', e => { if (e.key==='Escape' && sheetIdx!=null) closeSheet(); });
+try{ PHONE_MQ.addEventListener('change', applyPhone); }catch(_){ PHONE_MQ.addListener(applyPhone); }
+
 /* ---------- Boot ---------- */
 document.querySelectorAll('select').forEach(sel => { const w = document.createElement('span'); w.className = 'selwrap'; sel.parentNode.insertBefore(w, sel); w.appendChild(sel); });
 initSelects();
@@ -3783,6 +3962,7 @@ $('verify').className = 'verify mono text-xs ' + (verdict.errors.length?'bad':'o
 rerender();
 renderMetro();
 renderTuner();
+applyPhone();
 
 </script>
 
