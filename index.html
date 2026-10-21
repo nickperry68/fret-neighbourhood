@@ -3983,5 +3983,19 @@ applyPhone();
 
 </script>
 
+<script>
+/* Installable app (PWA): only on the published https site, never inside the shared Claude page or a local file. */
+if ('serviceWorker' in navigator && location.protocol === 'https:' && window.self === window.top){
+  const add = (tag, a) => document.head.appendChild(Object.assign(document.createElement(tag), a));
+  add('link', {rel:'manifest', href:'manifest.webmanifest'});
+  add('link', {rel:'apple-touch-icon', href:'icons/apple-touch-icon.png'});
+  add('meta', {name:'theme-color', content:'#1D1813'});
+  add('meta', {name:'apple-mobile-web-app-capable', content:'yes'});
+  add('meta', {name:'mobile-web-app-capable', content:'yes'});
+  add('meta', {name:'apple-mobile-web-app-title', content:'Fret Nbhd'});
+  add('meta', {name:'apple-mobile-web-app-status-bar-style', content:'black'});
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
 </body></html>
 

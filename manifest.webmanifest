@@ -1,0 +1,29 @@
+{
+ "name": "Fret Neighbourhood",
+ "short_name": "Fret Nbhd",
+ "description": "Voice-leading guide that keeps every chord in a progression within one zone of the neck, with tuner and metronome.",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#1D1813",
+ "theme_color": "#1D1813",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
